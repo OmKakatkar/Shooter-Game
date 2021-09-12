@@ -66,6 +66,8 @@ class Enemy {
   }
 }
 
+const friction = 0.90;
+
 class Particle {
   constructor(x, y, radius, color, velocity) {
     this.x = x;
@@ -88,6 +90,8 @@ class Particle {
 
   update() {
     this.draw();
+    this.velocity.x *= 0.99;
+    this.velocity.y *= 0.99;
     this.x = this.x + this.velocity.x;
     this.y = this.y + this.velocity.y;
     this.alpha -= 0.01;
@@ -200,13 +204,20 @@ function animate() {
       const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y);
 
       // Collision between Enemy and Projectile
+      // Create explosion
       if (dist - enemy.radius - projectile.radius < 1) {
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < enemy.radius * 2; i++) {
           particles.push(
-            new Particle(projectile.x, projectile.y, 3, enemy.color, {
-              x: Math.random() - 0.5,
-              y: Math.random() - 0.5,
-            })
+            new Particle(
+              projectile.x,
+              projectile.y,
+              Math.random() * 2,
+              enemy.color,
+              {
+                x: (Math.random() - 0.5) * (Math.random() * 4),
+                y: (Math.random() - 0.5) * (Math.random() * 4),
+              }
+            )
           );
         }
         if (enemy.radius - 10 > 10) {
