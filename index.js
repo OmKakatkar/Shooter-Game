@@ -5,6 +5,9 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 
 const scoreVal = document.querySelector("#scoreVal");
+const startGameBtn = document.querySelector("#startGameBtn");
+const modalEl = document.querySelector("#modalEl");
+const modalScore = document.querySelector("#modalScore");
 class Player {
   constructor(x, y, radius, color) {
     this.x = x;
@@ -102,12 +105,20 @@ class Particle {
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 
-const player = new Player(x, y, 10, "white");
-player.draw();
+let player = new Player(x, y, 10, "white");
+let enemies = [];
+let projectiles = [];
+let particles = [];
 
-const enemies = [];
-const projectiles = [];
-const particles = [];
+function init() {
+  player = new Player(x, y, 10, "white");
+  enemies = [];
+  projectiles = [];
+  particles = [];
+  score = 0;
+  scoreVal.innerText = score;
+  modalScore.innerText = score;
+}
 
 function spawnEnemies() {
   setInterval(() => {
@@ -142,20 +153,6 @@ const projectile = new Projectile(
   }
 );
 
-addEventListener("touchStart", (e) => {
-  const angle = Math.atan2(
-    e.clientY - canvas.height / 2,
-    e.clientX - canvas.width / 2
-  );
-
-  const velocity = {
-    x: Math.cos(angle) * 4,
-    y: Math.sin(angle) * 4,
-  };
-  projectiles.push(
-    new Projectile(canvas.width / 2, canvas.height / 2, 5, "white", velocity)
-  );
-});
 addEventListener("click", (e) => {
   const angle = Math.atan2(
     e.clientY - canvas.height / 2,
@@ -169,6 +166,13 @@ addEventListener("click", (e) => {
   projectiles.push(
     new Projectile(canvas.width / 2, canvas.height / 2, 5, "white", velocity)
   );
+});
+
+startGameBtn.addEventListener("click", (e) => {
+  init();
+  animate();
+  spawnEnemies();
+  modalEl.style.display = "none";
 });
 
 let animationId;
@@ -213,6 +217,8 @@ function animate() {
     // Game end condition (Enemy hits Player)
     if (dist - enemy.radius - player.radius < 1) {
       cancelAnimationFrame(animationId);
+      modalEl.style.display = "flex";
+      modalScore.innerText = score;
     }
 
     // Check distance between projectile and Enemy
@@ -261,5 +267,5 @@ function animate() {
   });
 }
 
-animate();
-spawnEnemies();
+// animate();
+// spawnEnemies();
