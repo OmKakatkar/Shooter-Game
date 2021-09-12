@@ -225,6 +225,7 @@ function animate() {
         if (enemy.radius - 10 > 6) {
           // Increment the Score
           score += 100;
+          scoreVal.innerText = score;
 
           gsap.to(enemy, {
             radius: enemy.radius - 10,
@@ -235,12 +236,12 @@ function animate() {
         } else {
           // Remove the enemy
           score += 250;
+          scoreVal.innerText = score;
           setTimeout(() => {
             enemies.splice(enemyIndex, 1);
             projectiles.splice(projectileIndex, 1);
           }, 0);
         }
-        scoreVal.innerText = score;
       }
     });
   });
