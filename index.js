@@ -110,18 +110,20 @@ let enemies = [];
 let projectiles = [];
 let particles = [];
 
+let enemyInterval = 1;
 function init() {
-  player = new Player(x, y, 10, "white");
   enemies = [];
   projectiles = [];
   particles = [];
   score = 0;
+  clearInterval(enemyInterval);
   scoreVal.innerText = score;
   modalScore.innerText = score;
+  cancelAnimationFrame(animationId);
 }
 
 function spawnEnemies() {
-  setInterval(() => {
+  enemyInterval = setInterval(() => {
     const radius = Math.random() * (30 - 5) + 5;
     let x;
     let y;
@@ -180,6 +182,7 @@ let score = 0;
 
 function animate() {
   animationId = requestAnimationFrame(animate);
+  // console.log(enemies);
   ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   player.draw();
