@@ -4,6 +4,7 @@ const ctx = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
+const scoreVal = document.querySelector("#scoreVal");
 class Player {
   constructor(x, y, radius, color) {
     this.x = x;
@@ -66,7 +67,7 @@ class Enemy {
   }
 }
 
-const friction = 0.90;
+const friction = 0.9;
 
 class Particle {
   constructor(x, y, radius, color, velocity) {
@@ -157,6 +158,7 @@ addEventListener("click", (e) => {
 });
 
 let animationId;
+let score = 0;
 
 function animate() {
   animationId = requestAnimationFrame(animate);
@@ -220,7 +222,10 @@ function animate() {
             )
           );
         }
-        if (enemy.radius - 10 > 10) {
+        if (enemy.radius - 10 > 6) {
+          // Increment the Score
+          score += 100;
+
           gsap.to(enemy, {
             radius: enemy.radius - 10,
           });
@@ -228,11 +233,14 @@ function animate() {
             projectiles.splice(projectileIndex, 1);
           }, 0);
         } else {
+          // Remove the enemy
+          score += 250;
           setTimeout(() => {
             enemies.splice(enemyIndex, 1);
             projectiles.splice(projectileIndex, 1);
           }, 0);
         }
+        scoreVal.innerText = score;
       }
     });
   });
